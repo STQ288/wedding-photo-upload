@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="sk">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Adriána a Samuel - Svadobné fotky</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-pink-50 min-h-screen flex flex-col items-center justify-center p-4">
+  <h1 class="text-4xl font-bold mb-2 text-pink-700">Adriána a Samuel</h1>
+  <p class="mb-6 text-center text-pink-600 max-w-md">
+    Ďakujeme, že spolu prežívate náš svadobný deň. Budeme radi, ak sa s nami
+    budete chcieť podeliť o Vaše fotografie nahratím na našu stránku.
+  </p>
+
+  <input type="file" id="fileInput" multiple accept="image/*,video/*" class="hidden" />
+  <button id="uploadBtn" class="bg-pink-600 hover:bg-pink-700 text-white px-6 py-3 rounded-lg mb-4">
+    Nahraj fotky alebo videá
+  </button>
+
+  <div id="status" class="text-pink-700 font-medium mb-4"></div>
+
+  <script>
+    const fileInput = document.getElementById('fileInput');
+    const uploadBtn = document.getElementById('uploadBtn');
+    const statusDiv = document.getElementById('status');
+
+    uploadBtn.addEventListener('click', () => {
+      fileInput.click();
+    });
+
+    fileInput.addEventListener('change', async () => {
+      const files = fileInput.files;
+      if (!files.length) return;
+
+      statusDiv.textContent = `Nahrávam ${files.length} súborov...`;
+
+      for (const file of files) {
+        const formData = new FormData();
+        formData.append('file', file);
+
+        try {
+          const response = await fetch('/api/upload', {
+            method: 'POST',
+            body: formData,
+          });
+          const data = await response.json();
+
+          if (data.success) {
+            statusDiv.textContent = `Súbor ${file.name} úspešne nahraný.`;
+          } else {
+            statusDiv.textContent = `Chyba pri nahrávaní súboru ${file.name}.`;
+          }
+        } catch (err) {
+          statusDiv.textContent = `Chyba pri nahrávaní súboru ${file.name}.`;
+        }
+      }
+
+      // Po nahraní môžeš tu pridať zobrazenie Google formulára alebo ďalšiu logiku
+    });
+  </script>
+</body>
+</html>

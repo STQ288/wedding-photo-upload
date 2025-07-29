@@ -1,0 +1,12 @@
+{
+  "name": "wedding-photo-upload",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "dev": "vercel dev"
+  },
+  "dependencies": {
+    "formidable": "^2.1.1",
+    "googleapis": "^118.0.0"
+  }
+}
